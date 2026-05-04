@@ -7,15 +7,26 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('token') || '')
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('user')
-    return storedUser ? JSON.parse(storedUser) : null
+
+    if (!storedUser) {
+      return null
+    }
+
+    try {
+      const parsedUser = JSON.parse(storedUser)
+      return parsedUser && typeof parsedUser === 'object' ? parsedUser : null
+    } catch {
+      return null
+    }
   })
 
   const login = (newToken, newUser) => {
+    const isValidUser = newUser && typeof newUser === 'object'
     setToken(newToken)
-    setUser(newUser || null)
+    setUser(isValidUser ? newUser : null)
     localStorage.setItem('token', newToken)
 
-    if (newUser) {
+    if (isValidUser) {
       localStorage.setItem('user', JSON.stringify(newUser))
     } else {
       localStorage.removeItem('user')
