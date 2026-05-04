@@ -17,8 +17,8 @@ const transactionLimiter = rateLimit({
   legacyHeaders: false,
 })
 
-router.use(auth)
 router.use(transactionLimiter)
+router.use(auth)
 
 router.post('/', addTransaction)
 router.get('/stats', getStats)

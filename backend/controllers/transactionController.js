@@ -9,10 +9,16 @@ const addTransaction = async (req, res) => {
       return res.status(400).json({ message: 'Title, amount, type, and category are required' })
     }
 
+    const parsedAmount = Number(amount)
+
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      return res.status(400).json({ message: 'Amount must be a positive number' })
+    }
+
     const transaction = await Transaction.create({
       userId: req.user.id,
       title,
-      amount,
+      amount: parsedAmount,
       type,
       category,
       note,

@@ -60,11 +60,8 @@ const Dashboard = () => {
   }, [token])
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      loadTransactions()
-    }, 0)
-
-    return () => clearTimeout(timeoutId)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadTransactions()
   }, [loadTransactions])
 
   const handleSubmit = async (event) => {
