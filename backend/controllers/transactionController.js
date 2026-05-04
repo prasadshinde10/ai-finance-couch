@@ -12,7 +12,7 @@ const addTransaction = async (req, res) => {
     const parsedAmount = Number(amount)
 
     if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
-      return res.status(400).json({ message: 'Amount must be a positive number' })
+      return res.status(400).json({ message: 'Amount must be greater than zero' })
     }
 
     const transaction = await Transaction.create({
