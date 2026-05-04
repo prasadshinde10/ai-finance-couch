@@ -27,7 +27,7 @@ const Dashboard = () => {
   const [type, setType] = useState('expense')
   const [category, setCategory] = useState('food')
   const [note, setNote] = useState('')
-  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0])
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [transactions, setTransactions] = useState([])
   const [stats, setStats] = useState({ totalIncome: 0, totalExpense: 0, balance: 0 })
   const [error, setError] = useState('')

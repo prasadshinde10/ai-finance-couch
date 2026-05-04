@@ -5,7 +5,7 @@ const addTransaction = async (req, res) => {
   try {
     const { title, amount, type, category, note, date } = req.body
 
-    if (!title || amount === undefined || !type || !category) {
+    if (!title || amount == null || !type || !category) {
       return res.status(400).json({ message: 'Title, amount, type, and category are required' })
     }
 
