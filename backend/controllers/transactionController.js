@@ -65,26 +65,29 @@ const deleteTransaction = async (req, res) => {
 
 const getStats = async (req, res) => {
   try {
-    const transactions = await Transaction.find({ userId: req.user.id }).select('amount type')
-
-    const totals = transactions.reduce(
-      (accumulator, transaction) => {
-        if (transaction.type === 'income') {
-          accumulator.totalIncome += transaction.amount
-        } else if (transaction.type === 'expense') {
-          accumulator.totalExpense += transaction.amount
-        }
-
-        return accumulator
+    const userObjectId = new mongoose.Types.ObjectId(req.user.id)
+    const [stats] = await Transaction.aggregate([
+      { $match: { userId: userObjectId } },
+      {
+        $group: {
+          _id: null,
+          totalIncome: {
+            $sum: { $cond: [{ $eq: ['$type', 'income'] }, '$amount', 0] },
+          },
+          totalExpense: {
+            $sum: { $cond: [{ $eq: ['$type', 'expense'] }, '$amount', 0] },
+          },
+        },
       },
-      { totalIncome: 0, totalExpense: 0 }
-    )
+    ])
 
-    const balance = totals.totalIncome - totals.totalExpense
+    const totalIncome = stats?.totalIncome ?? 0
+    const totalExpense = stats?.totalExpense ?? 0
+    const balance = totalIncome - totalExpense
 
     return res.status(200).json({
-      totalIncome: totals.totalIncome,
-      totalExpense: totals.totalExpense,
+      totalIncome,
+      totalExpense,
       balance,
     })
   } catch (error) {

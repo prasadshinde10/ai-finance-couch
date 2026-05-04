@@ -12,7 +12,7 @@ const router = express.Router()
 
 const transactionLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 120,
+  max: 300,
   standardHeaders: true,
   legacyHeaders: false,
 })
