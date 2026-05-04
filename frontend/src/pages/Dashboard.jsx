@@ -87,7 +87,6 @@ const Dashboard = () => {
       setTitle('')
       setAmount('')
       setNote('')
-      setIsLoading(true)
       await loadTransactions()
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add transaction')
@@ -98,7 +97,6 @@ const Dashboard = () => {
 
   const handleDelete = async (id) => {
     setError('')
-    setIsLoading(true)
 
     try {
       await deleteTransaction(id, token)
