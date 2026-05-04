@@ -16,6 +16,11 @@ app.get('/api/health', (req, res) => {
 
 const { MONGO_URI, PORT = 5000 } = process.env;
 
+if (!MONGO_URI) {
+  console.error('MONGO_URI is not set. Please add it to your environment.');
+  process.exit(1);
+}
+
 mongoose
   .connect(MONGO_URI)
   .then(() => {
