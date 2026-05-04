@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import Navbar from '../components/Navbar'
 import {
   addTransaction,
   deleteTransaction,
@@ -20,8 +20,7 @@ const categories = [
 ]
 
 const Dashboard = () => {
-  const { user, token, logout } = useAuth()
-  const navigate = useNavigate()
+  const { user, token } = useAuth()
   const [title, setTitle] = useState('')
   const [amount, setAmount] = useState('')
   const [type, setType] = useState('expense')
@@ -33,11 +32,6 @@ const Dashboard = () => {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
 
   const loadTransactions = useCallback(async () => {
     if (!token) {
@@ -106,21 +100,14 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
-        <header className="flex flex-col gap-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-lg md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-3xl font-semibold">Dashboard</h1>
-            <p className="mt-2 text-sm text-slate-300">
-              Welcome back{user?.name ? `, ${user.name}` : ''}! Track your income and
-              expenses below.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="rounded-lg border border-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-300 transition hover:bg-emerald-400 hover:text-slate-950"
-          >
-            Log out
-          </button>
+        <Navbar />
+
+        <header className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-lg">
+          <h1 className="text-3xl font-semibold">Dashboard</h1>
+          <p className="mt-2 text-sm text-slate-300">
+            Welcome back{user?.name ? `, ${user.name}` : ''}! Track your income and
+            expenses below.
+          </p>
         </header>
 
         {error ? (
