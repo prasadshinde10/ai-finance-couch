@@ -225,7 +225,8 @@ const AICoach = () => {
                   </ResponsiveContainer>
                 </div>
               </div>
-            ) : !budgetLoading ? (
+            ) : null}
+            {!budgetLoading && budgetRows.length === 0 ? (
               <p className="text-sm text-slate-400">Click the button to generate a budget.</p>
             ) : null}
           </div>
@@ -259,16 +260,17 @@ const AICoach = () => {
 
             {insights.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-3">
-                {insights.map((insight, index) => (
+                {insights.map((insight) => (
                   <div
-                    key={`insight-${hashString(insight)}-${index}`}
+                    key={`insight-${hashString(insight)}`}
                     className="rounded-xl bg-yellow-100 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm"
                   >
                     {insight}
                   </div>
                 ))}
               </div>
-            ) : !insightsLoading ? (
+            ) : null}
+            {!insightsLoading && insights.length === 0 ? (
               <p className="text-sm text-slate-400">Run an analysis to see insights.</p>
             ) : null}
           </div>
@@ -292,9 +294,9 @@ const AICoach = () => {
 
             {nudges.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-3">
-                {nudges.map((nudge, index) => (
+                {nudges.map((nudge) => (
                   <div
-                    key={`nudge-${hashString(nudge)}-${index}`}
+                    key={`nudge-${hashString(nudge)}`}
                     className="rounded-xl bg-emerald-100 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm"
                   >
                     <span className="mr-2">💡</span>
@@ -302,7 +304,8 @@ const AICoach = () => {
                   </div>
                 ))}
               </div>
-            ) : !nudgesLoading ? (
+            ) : null}
+            {!nudgesLoading && nudges.length === 0 ? (
               <p className="text-sm text-slate-400">Fetching your nudges now.</p>
             ) : null}
           </div>

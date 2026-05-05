@@ -77,6 +77,14 @@ const summarizeTransactions = (transactions = []) => {
   }
 }
 
+const getTemperature = () => {
+  const parsed = Number(process.env.OPENAI_TEMPERATURE)
+  if (!Number.isFinite(parsed)) {
+    return 0.3
+  }
+  return Math.min(Math.max(parsed, 0), 2)
+}
+
 const createCompletion = async (prompt) => {
   const client = getClient()
   const model = process.env.OPENAI_MODEL || 'gpt-4o-mini'
@@ -89,7 +97,7 @@ const createCompletion = async (prompt) => {
       },
       { role: 'user', content: prompt },
     ],
-    temperature: 0.3,
+    temperature: getTemperature(),
   })
 
   const content = response?.choices?.[0]?.message?.content

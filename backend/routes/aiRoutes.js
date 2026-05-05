@@ -5,7 +5,7 @@ const { getBudgetPrediction, getInsights, getNudges } = require('../controllers/
 
 const router = express.Router()
 
-// Limit AI requests to control usage costs.
+// Limit AI requests to 20 per 15 minutes to control usage costs.
 const aiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
