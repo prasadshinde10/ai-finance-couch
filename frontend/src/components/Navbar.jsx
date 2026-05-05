@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'
 
 const navLinks = [
   { to: '/dashboard', label: 'Dashboard' },
+  { to: '/goals', label: 'Goals' },
   { to: '/ai-coach', label: 'AI Coach' },
 ]
 

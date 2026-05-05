@@ -3,6 +3,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import AICoach from './pages/AICoach'
+import Goals from './pages/Goals'
 import PrivateRoute from './components/PrivateRoute'
 import { AuthProvider } from './context/AuthContext'
 
@@ -25,6 +26,14 @@ const App = () => (
           element={
             <PrivateRoute>
               <AICoach />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/goals"
+          element={
+            <PrivateRoute>
+              <Goals />
             </PrivateRoute>
           }
         />
