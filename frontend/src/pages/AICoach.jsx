@@ -200,11 +200,11 @@ const AICoach = () => {
                     <BarChart data={budgetRows}>
                       <XAxis
                         dataKey="category"
-                        stroke="#cbd5f5"
+                        stroke="#cbd5e1"
                         label={{ value: 'Category', position: 'insideBottom', offset: -5 }}
                       />
                       <YAxis
-                        stroke="#cbd5f5"
+                        stroke="#cbd5e1"
                         label={{ value: 'Suggested Limit (₹)', angle: -90, position: 'insideLeft' }}
                       />
                       <Tooltip
@@ -250,9 +250,9 @@ const AICoach = () => {
 
             {insights.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-3">
-                {insights.map((insight) => (
+                {insights.map((insight, index) => (
                   <div
-                    key={insight}
+                    key={`insight-${index}`}
                     className="rounded-xl bg-yellow-100 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm"
                   >
                     {insight}
@@ -283,9 +283,9 @@ const AICoach = () => {
 
             {nudges.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-3">
-                {nudges.map((nudge) => (
+                {nudges.map((nudge, index) => (
                   <div
-                    key={nudge}
+                    key={`nudge-${index}`}
                     className="rounded-xl bg-emerald-100 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm"
                   >
                     <span className="mr-2">💡</span>
