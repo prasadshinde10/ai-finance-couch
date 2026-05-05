@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '../api/axiosInstance'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '../context/AuthContext'
 
@@ -13,15 +13,13 @@ const Register = () => {
   const navigate = useNavigate()
   const { login } = useAuth()
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-
   const handleSubmit = async (event) => {
     event.preventDefault()
     setError('')
     setIsSubmitting(true)
 
     try {
-      const response = await axios.post(`${API_URL}/api/auth/register`, {
+      const response = await axiosInstance.post('/api/auth/register', {
         name,
         email,
         password,
