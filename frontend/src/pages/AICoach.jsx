@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { toast } from 'react-hot-toast'
 import { getBudgetPrediction, getInsights, getNudges } from '../api/aiApi'
 import Navbar from '../components/Navbar'
+import Spinner from '../components/Spinner'
 import { useAuth } from '../context/AuthContext'
 
 const normalizeBudgetData = (data) => {
@@ -71,13 +73,6 @@ const hashString = (value = '') => {
   return Math.abs(hash).toString(36)
 }
 
-const LoadingIndicator = ({ label }) => (
-  <div className="flex items-center gap-2 text-sm text-slate-400">
-    <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-500 border-t-transparent" />
-    <span>{label}</span>
-  </div>
-)
-
 const AICoach = () => {
   const { token } = useAuth()
   const [budgetData, setBudgetData] = useState(null)
@@ -100,7 +95,9 @@ const AICoach = () => {
       const data = await getBudgetPrediction(token)
       setBudgetData(data)
     } catch (err) {
-      setBudgetError(err.response?.data?.message || 'Failed to predict budget')
+      const message = err.response?.data?.message || 'Failed to predict budget'
+      setBudgetError(message)
+      toast.error(message)
     } finally {
       setBudgetLoading(false)
     }
@@ -114,7 +111,9 @@ const AICoach = () => {
       const data = await getInsights(token)
       setInsights(Array.isArray(data) ? data : [])
     } catch (err) {
-      setInsightsError(err.response?.data?.message || 'Failed to analyze spending')
+      const message = err.response?.data?.message || 'Failed to analyze spending'
+      setInsightsError(message)
+      toast.error(message)
     } finally {
       setInsightsLoading(false)
     }
@@ -133,7 +132,9 @@ const AICoach = () => {
         const data = await getNudges(token)
         setNudges(Array.isArray(data) ? data : [])
       } catch (err) {
-        setNudgesError(err.response?.data?.message || 'Failed to load nudges')
+        const message = err.response?.data?.message || 'Failed to load nudges'
+        setNudgesError(message)
+        toast.error(message)
       } finally {
         setNudgesLoading(false)
       }
@@ -143,29 +144,29 @@ const AICoach = () => {
   }, [token])
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
         <Navbar />
 
-        <header className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-lg">
-          <h1 className="text-3xl font-semibold">AI Coach</h1>
-          <p className="mt-2 text-sm text-slate-300">
+        <header className="rounded-xl bg-white p-6 shadow-md">
+          <h1 className="text-2xl font-semibold text-gray-900">AI Coach</h1>
+          <p className="mt-2 text-sm text-gray-600">
             Get predictive budgets, emotional spending insights, and personalized nudges.
           </p>
         </header>
 
-        <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg">
+        <section className="rounded-xl bg-white p-6 shadow-md">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-xl font-semibold">Predictive Budget</h2>
-              <p className="mt-1 text-sm text-slate-400">
+              <h2 className="text-lg font-semibold text-gray-900">Predictive Budget</h2>
+              <p className="mt-1 text-sm text-gray-600">
                 Forecast next month&apos;s budget based on your last 30 days.
               </p>
             </div>
             <button
               type="button"
               onClick={handlePredictBudget}
-              className="rounded-lg bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300 disabled:cursor-not-allowed disabled:opacity-70"
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
               disabled={budgetLoading}
             >
               Predict My Budget
@@ -173,18 +174,18 @@ const AICoach = () => {
           </div>
 
           <div className="mt-4 space-y-4">
-            {budgetLoading ? <LoadingIndicator label="Analyzing..." /> : null}
+            {budgetLoading ? <Spinner label="Analyzing..." /> : null}
             {budgetError ? (
-              <div className="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm text-red-200">
+              <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
                 {budgetError}
               </div>
             ) : null}
 
             {budgetRows.length > 0 ? (
               <div className="grid gap-6 lg:grid-cols-[1.1fr_1fr]">
-                <div className="overflow-hidden rounded-xl border border-slate-800">
+                <div className="overflow-hidden rounded-xl border border-gray-200">
                   <table className="w-full text-left text-sm">
-                    <thead className="bg-slate-900/80 text-slate-300">
+                    <thead className="bg-gray-50 text-gray-600">
                       <tr>
                         <th className="px-4 py-3 font-medium">Category</th>
                         <th className="px-4 py-3 font-medium">Suggested Limit</th>
@@ -194,7 +195,7 @@ const AICoach = () => {
                       {budgetRows.map((row, index) => (
                         <tr
                           key={row.category}
-                          className={index % 2 === 0 ? 'bg-slate-900/40' : 'bg-slate-900/20'}
+                          className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
                         >
                           <td className="px-4 py-3 capitalize">{row.category}</td>
                           <td className="px-4 py-3">{formatRupees(row.limit)}</td>
@@ -204,46 +205,46 @@ const AICoach = () => {
                   </table>
                 </div>
 
-                <div className="h-64 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+                <div className="h-64 rounded-xl border border-gray-200 bg-white p-4">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={budgetRows}>
                       <XAxis
                         dataKey="category"
-                        stroke="#cbd5e1"
+                        stroke="#6b7280"
                         label={{ value: 'Category', position: 'insideBottom', offset: -5 }}
                       />
                       <YAxis
-                        stroke="#cbd5e1"
+                        stroke="#6b7280"
                         label={{ value: 'Suggested Limit (₹)', angle: -90, position: 'insideLeft' }}
                       />
                       <Tooltip
-                        cursor={{ fill: 'rgba(148, 163, 184, 0.1)' }}
+                        cursor={{ fill: 'rgba(229, 231, 235, 0.6)' }}
                         formatter={(value) => formatRupees(value)}
                       />
-                      <Bar dataKey="limit" fill="#34d399" radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="limit" fill="#2563eb" radius={[8, 8, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
             ) : null}
             {!budgetLoading && budgetRows.length === 0 ? (
-              <p className="text-sm text-slate-400">Click the button to generate a budget.</p>
+              <p className="text-sm text-gray-500">Click the button to generate a budget.</p>
             ) : null}
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg">
+        <section className="rounded-xl bg-white p-6 shadow-md">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-xl font-semibold">Emotional Spending Insights</h2>
-              <p className="mt-1 text-sm text-slate-400">
+              <h2 className="text-lg font-semibold text-gray-900">Emotional Spending Insights</h2>
+              <p className="mt-1 text-sm text-gray-600">
                 Discover emotional or impulsive patterns in your spending.
               </p>
             </div>
             <button
               type="button"
               onClick={handleAnalyzeSpending}
-              className="rounded-lg bg-amber-300 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-70"
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
               disabled={insightsLoading}
             >
               Analyze My Spending
@@ -251,9 +252,9 @@ const AICoach = () => {
           </div>
 
           <div className="mt-4 space-y-4">
-            {insightsLoading ? <LoadingIndicator label="Analyzing..." /> : null}
+            {insightsLoading ? <Spinner label="Analyzing..." /> : null}
             {insightsError ? (
-              <div className="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm text-red-200">
+              <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
                 {insightsError}
               </div>
             ) : null}
@@ -263,7 +264,7 @@ const AICoach = () => {
                 {insights.map((insight) => (
                   <div
                     key={`insight-${hashString(insight)}`}
-                    className="rounded-xl bg-yellow-100 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm"
+                    className="rounded-xl border border-blue-100 bg-white p-6 text-sm font-medium text-gray-900 shadow-md"
                   >
                     {insight}
                   </div>
@@ -271,23 +272,23 @@ const AICoach = () => {
               </div>
             ) : null}
             {!insightsLoading && insights.length === 0 ? (
-              <p className="text-sm text-slate-400">Run an analysis to see insights.</p>
+              <p className="text-sm text-gray-500">Run an analysis to see insights.</p>
             ) : null}
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg">
+        <section className="rounded-xl bg-white p-6 shadow-md">
           <div>
-            <h2 className="text-xl font-semibold">Financial Nudges</h2>
-            <p className="mt-1 text-sm text-slate-400">
+            <h2 className="text-lg font-semibold text-gray-900">Financial Nudges</h2>
+            <p className="mt-1 text-sm text-gray-600">
               Personalized tips based on your spending and goals.
             </p>
           </div>
 
           <div className="mt-4 space-y-4">
-            {nudgesLoading ? <LoadingIndicator label="Analyzing..." /> : null}
+            {nudgesLoading ? <Spinner label="Analyzing..." /> : null}
             {nudgesError ? (
-              <div className="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm text-red-200">
+              <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
                 {nudgesError}
               </div>
             ) : null}
@@ -297,7 +298,7 @@ const AICoach = () => {
                 {nudges.map((nudge) => (
                   <div
                     key={`nudge-${hashString(nudge)}`}
-                    className="rounded-xl bg-emerald-100 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm"
+                    className="rounded-xl border border-green-100 bg-white p-6 text-sm font-medium text-gray-900 shadow-md"
                   >
                     <span className="mr-2">💡</span>
                     {nudge}
@@ -306,7 +307,7 @@ const AICoach = () => {
               </div>
             ) : null}
             {!nudgesLoading && nudges.length === 0 ? (
-              <p className="text-sm text-slate-400">Fetching your nudges now.</p>
+              <p className="text-sm text-gray-500">Fetching your nudges now.</p>
             ) : null}
           </div>
         </section>
