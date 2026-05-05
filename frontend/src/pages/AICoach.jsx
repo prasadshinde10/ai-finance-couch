@@ -62,6 +62,15 @@ const formatRupees = (value) =>
     maximumFractionDigits: 0,
   }).format(Number(value) || 0)
 
+const hashString = (value = '') => {
+  let hash = 0
+  for (let index = 0; index < value.length; index += 1) {
+    hash = (hash << 5) - hash + value.charCodeAt(index)
+    hash |= 0
+  }
+  return Math.abs(hash).toString(36)
+}
+
 const LoadingIndicator = ({ label }) => (
   <div className="flex items-center gap-2 text-sm text-slate-400">
     <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-500 border-t-transparent" />
@@ -252,7 +261,7 @@ const AICoach = () => {
               <div className="grid gap-4 md:grid-cols-3">
                 {insights.map((insight, index) => (
                   <div
-                    key={`insight-${index}`}
+                    key={`insight-${hashString(insight)}-${index}`}
                     className="rounded-xl bg-yellow-100 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm"
                   >
                     {insight}
@@ -285,7 +294,7 @@ const AICoach = () => {
               <div className="grid gap-4 md:grid-cols-3">
                 {nudges.map((nudge, index) => (
                   <div
-                    key={`nudge-${index}`}
+                    key={`nudge-${hashString(nudge)}-${index}`}
                     className="rounded-xl bg-emerald-100 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm"
                   >
                     <span className="mr-2">💡</span>
