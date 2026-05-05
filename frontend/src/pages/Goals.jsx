@@ -33,11 +33,17 @@ const formatDate = (value) => {
   return parsed.toLocaleDateString()
 }
 
+const getDefaultDeadline = () => {
+  const next = new Date()
+  next.setDate(next.getDate() + 30)
+  return next.toISOString().split('T')[0]
+}
+
 const Goals = () => {
   const { token } = useAuth()
   const [title, setTitle] = useState('')
   const [targetAmount, setTargetAmount] = useState('')
-  const [deadline, setDeadline] = useState(new Date().toISOString().split('T')[0])
+  const [deadline, setDeadline] = useState(() => getDefaultDeadline())
   const [category, setCategory] = useState('emergency')
   const [goals, setGoals] = useState([])
   const [progressInputs, setProgressInputs] = useState({})
@@ -64,7 +70,6 @@ const Goals = () => {
   }, [token])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadGoals()
   }, [loadGoals])
 
@@ -85,7 +90,7 @@ const Goals = () => {
       )
       setTitle('')
       setTargetAmount('')
-      setDeadline(new Date().toISOString().split('T')[0])
+      setDeadline(getDefaultDeadline())
       setCategory('emergency')
       await loadGoals()
     } catch (err) {

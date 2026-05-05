@@ -63,6 +63,7 @@ const runWeeklyReports = async () => {
 }
 
 const scheduleWeeklyReports = () => {
+  // Run every Sunday at 8:00 AM.
   cron.schedule('0 8 * * 0', () => {
     runWeeklyReports().catch((error) => {
       console.error('Weekly report job failed:', error)

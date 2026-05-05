@@ -23,6 +23,10 @@ const createGoal = async (req, res) => {
       return res.status(400).json({ message: 'Deadline must be a valid date' })
     }
 
+    if (parsedDeadline < new Date()) {
+      return res.status(400).json({ message: 'Deadline must be in the future' })
+    }
+
     const goal = await Goal.create({
       userId: req.user.id,
       title: title.trim(),

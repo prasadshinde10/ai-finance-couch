@@ -1,4 +1,5 @@
 const express = require('express')
+const rateLimit = require('express-rate-limit')
 const auth = require('../middleware/auth')
 const {
   createGoal,
@@ -9,6 +10,14 @@ const {
 
 const router = express.Router()
 
+const goalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+router.use(goalLimiter)
 router.use(auth)
 
 router.post('/', createGoal)
