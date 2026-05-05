@@ -5,6 +5,8 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const aiRoutes = require('./routes/aiRoutes');
+const goalRoutes = require('./routes/goalRoutes');
+const scheduleWeeklyReports = require('./jobs/weeklyReport');
 
 dotenv.config();
 
@@ -16,6 +18,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/goals', goalRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK' });
@@ -32,6 +35,7 @@ mongoose
   .connect(MONGO_URI)
   .then(() => {
     console.log('MongoDB connected');
+    scheduleWeeklyReports();
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
