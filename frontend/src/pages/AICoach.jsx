@@ -184,7 +184,7 @@ const AICoach = () => {
                     <tbody>
                       {budgetRows.map((row, index) => (
                         <tr
-                          key={`${row.category}-${index}`}
+                          key={row.category}
                           className={index % 2 === 0 ? 'bg-slate-900/40' : 'bg-slate-900/20'}
                         >
                           <td className="px-4 py-3 capitalize">{row.category}</td>
@@ -245,7 +245,7 @@ const AICoach = () => {
               <div className="grid gap-4 md:grid-cols-3">
                 {insights.map((insight, index) => (
                   <div
-                    key={`${insight}-${index}`}
+                    key={index}
                     className="rounded-xl bg-yellow-100 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm"
                   >
                     {insight}
@@ -278,7 +278,7 @@ const AICoach = () => {
               <div className="grid gap-4 md:grid-cols-3">
                 {nudges.map((nudge, index) => (
                   <div
-                    key={`${nudge}-${index}`}
+                    key={index}
                     className="rounded-xl bg-emerald-100 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm"
                   >
                     <span className="mr-2">💡</span>

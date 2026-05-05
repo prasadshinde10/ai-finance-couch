@@ -6,6 +6,24 @@ const {
   getFinancialNudges,
 } = require('../services/openaiService')
 
+const handleAiError = (res, error, fallbackMessage) => {
+  console.error(fallbackMessage, error)
+
+  if (error?.message === 'OPENAI_API_KEY is not set') {
+    return res.status(500).json({ message: 'OpenAI configuration error' })
+  }
+
+  if (error?.message === 'No response from OpenAI') {
+    return res.status(502).json({ message: 'OpenAI service unavailable' })
+  }
+
+  if (error instanceof SyntaxError) {
+    return res.status(502).json({ message: 'Invalid response from OpenAI' })
+  }
+
+  return res.status(500).json({ message: fallbackMessage })
+}
+
 const getBudgetPrediction = async (req, res) => {
   try {
     const cutoffDate = new Date()
@@ -19,7 +37,7 @@ const getBudgetPrediction = async (req, res) => {
     const prediction = await getPredictiveBudget(transactions)
     return res.status(200).json(prediction)
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to generate budget prediction' })
+    return handleAiError(res, error, 'Failed to generate budget prediction')
   }
 }
 
@@ -29,7 +47,7 @@ const getInsights = async (req, res) => {
     const insights = await getEmotionalInsights(transactions)
     return res.status(200).json(insights)
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to generate insights' })
+    return handleAiError(res, error, 'Failed to generate insights')
   }
 }
 
@@ -47,7 +65,7 @@ const getNudges = async (req, res) => {
     const nudges = await getFinancialNudges(transactions, user.goals || [])
     return res.status(200).json(nudges)
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to generate nudges' })
+    return handleAiError(res, error, 'Failed to generate nudges')
   }
 }
 
