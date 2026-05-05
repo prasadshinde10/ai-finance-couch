@@ -7,7 +7,7 @@ const router = express.Router()
 
 const aiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 60,
+  max: 20,
   standardHeaders: true,
   legacyHeaders: false,
 })

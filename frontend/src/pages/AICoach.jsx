@@ -198,8 +198,15 @@ const AICoach = () => {
                 <div className="h-64 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={budgetRows}>
-                      <XAxis dataKey="category" stroke="#cbd5f5" />
-                      <YAxis stroke="#cbd5f5" />
+                      <XAxis
+                        dataKey="category"
+                        stroke="#cbd5f5"
+                        label={{ value: 'Category', position: 'insideBottom', offset: -5 }}
+                      />
+                      <YAxis
+                        stroke="#cbd5f5"
+                        label={{ value: 'Suggested Limit (₹)', angle: -90, position: 'insideLeft' }}
+                      />
                       <Tooltip
                         cursor={{ fill: 'rgba(148, 163, 184, 0.1)' }}
                         formatter={(value) => formatRupees(value)}
@@ -243,9 +250,9 @@ const AICoach = () => {
 
             {insights.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-3">
-                {insights.map((insight, index) => (
+                {insights.map((insight) => (
                   <div
-                    key={index}
+                    key={insight}
                     className="rounded-xl bg-yellow-100 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm"
                   >
                     {insight}
@@ -276,9 +283,9 @@ const AICoach = () => {
 
             {nudges.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-3">
-                {nudges.map((nudge, index) => (
+                {nudges.map((nudge) => (
                   <div
-                    key={index}
+                    key={nudge}
                     className="rounded-xl bg-emerald-100 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm"
                   >
                     <span className="mr-2">💡</span>
