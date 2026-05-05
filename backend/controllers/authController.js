@@ -42,7 +42,7 @@ const register = async (req, res) => {
 
     return res.status(201).json({
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, name: user.name, email: user.email, createdAt: user.createdAt },
     })
   } catch (error) {
     if (error.code === 11000) {
@@ -82,7 +82,7 @@ const login = async (req, res) => {
 
     return res.status(200).json({
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, name: user.name, email: user.email, createdAt: user.createdAt },
     })
   } catch (error) {
     if (error.message === 'JWT_SECRET is not set') {
